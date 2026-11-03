@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ôn Tập Giữa Kì I Tin Học 7</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f7f6; color: #333; margin: 0; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        h1, h2 { text-align: center; color: #2c3e50; }
+        .info { text-align: center; font-style: italic; margin-bottom: 20px; color: #555; }
+        
+        /* CSS cho phần thông tin học sinh */
+        .student-info { background-color: #eaf2f8; padding: 20px; border-radius: 8px; margin-bottom: 25px; border: 1px solid #d4e6f1; }
+        .student-info h3 { margin-top: 0; color: #2980b9; }
+        .input-group { margin-bottom: 12px; }
+        .input-group label { font-weight: bold; display: block; margin-bottom: 5px; }
+        .input-group input { width: 100%; padding: 10px; border: 1px solid #bdc3c7; border-radius: 4px; box-sizing: border-box; font-size: 1em; }
+        
+        .question { margin-bottom: 20px; padding: 15px; border-bottom: 1px solid #ddd; }
+        .question-title { font-weight: bold; margin-bottom: 10px; font-size: 1.1em; color: #2980b9; }
+        .options { display: flex; flex-direction: column; gap: 8px; }
+        label.option-label { cursor: pointer; padding: 8px; border-radius: 4px; transition: background 0.2s; border: 1px solid transparent; font-weight: normal; display: block;}
+        label.option-label:hover { background-color: #f0f0f0; }
+        .btn-submit { display: block; width: 100%; padding: 15px; font-size: 1.2em; color: #fff; background-color: #3498db; border: none; border-radius: 5px; cursor: pointer; margin-top: 20px; font-weight: bold; transition: background 0.3s;}
+        .btn-submit:hover { background-color: #2980b9; }
+        
+        #result { display: none; margin-top: 20px; padding: 20px; background-color: #e8f8f5; border: 1px solid #1abc9c; border-radius: 5px; text-align: center; font-size: 1.2em; color: #16a085; }
+        #result h3 { margin-top: 0; color: #117864; font-size: 1.3em;}
+        .correct-text { background-color: #d5f5e3; border-color: #27ae60; color: #27ae60; font-weight: bold; }
+        .wrong-text { background-color: #fadbd8; border-color: #e74c3c; color: #c0392b; text-decoration: line-through; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>ĐỀ CƯƠNG ÔN TẬP GIỮA KÌ I TIN HỌC 7</h1>
+    <div class="info">
+        <p>ĐỀ KIỂM TRA GỒM: 28 CÂU TRẮC NGHIỆM (7đ) VÀ 3 CÂU TL (3đ)</p>
+        <p>TUẦN 8 KIỂM TRA THEO TKB - HỌC SINH TỰ CHUẨN BỊ GIẤY LÀM KIỂM TRA</p>
+    </div>
+    
+    <form id="quizForm">
+        <!-- Phần nhập thông tin -->
+        <div class="student-info">
+            <h3>Thông tin học sinh</h3>
+            <div class="input-group">
+                <label for="studentName">Họ và tên:</label>
+                <input type="text" id="studentName" placeholder="Nhập họ và tên..." required>
+            </div>
+            <div class="input-group">
+                <label for="studentClass">Lớp:</label>
+                <input type="text" id="studentClass" placeholder="Nhập lớp (VD: 7A1)..." required>
+            </div>
+            <div class="input-group">
+                <label for="schoolName">Trường:</label>
+                <input type="text" id="schoolName" placeholder="Nhập tên trường..." required>
+            </div>
+        </div>
+
+        <div id="quiz-container"></div>
+        <button type="button" class="btn-submit" onclick="submitQuiz()">Nộp bài & Xem kết quả</button>
+    </form>
+    <div id="result"></div>
+</div>
+
+<script>
+    const questions = [
+        { q: "Câu 1. Thiết bị nào đưa âm thanh từ máy tính đến người nghe?", options: { A: "Micro", B: "Loa", C: "Máy quét", D: "Chuột" }, answer: "B" },
+        { q: "Câu 2. Phần mềm nào thuộc nhóm hệ điều hành máy tính?", options: { A: "Phần mềm luyện gõ", B: "Phần mềm trình chiếu", C: "Phần mềm xem ảnh", D: "Linux" }, answer: "D" },
+        { q: "Câu 3. Phần mềm ứng dụng chủ yếu giúp người dùng làm gì?", options: { A: "Làm máy tính không cần điện", B: "Tăng kích thước bàn phím", C: "Thay thế mọi thiết bị vật lí", D: "Thực hiện những công việc cụ thể" }, answer: "D" },
+        { q: "Câu 4. Vì sao cần cập nhật phần mềm chống virus?", options: { A: "Để khỏi cần sao lưu", B: "Để đổi tên toàn bộ tệp", C: "Để tăng kích thước máy in", D: "Để bổ sung khả năng nhận diện các mối đe dọa mới" }, answer: "D" },
+        { q: "Câu 5. Lệnh Rename dùng để làm gì?", options: { A: "Xóa tệp", B: "Quét virus", C: "Đổi tên tệp hoặc thư mục", D: "In tệp" }, answer: "C" },
+        { q: "Câu 6. Vì sao bản sao lưu trên ổ cứng ngoài giúp giảm rủi ro hơn bản sao trên cùng ổ cứng máy tính?", options: { A: "Ổ ngoài tự sửa mọi tệp", B: "Ổ cứng máy tính hỏng vẫn có thể còn bản sao ở thiết bị khác", C: "Ổ ngoài không bao giờ hỏng", D: "Bản sao cùng ổ luôn tự mất ngay" }, answer: "B" },
+        { q: "Câu 7. Mật khẩu tài khoản giúp thực hiện việc nào?", options: { A: "Tự in dữ liệu", B: "Tăng dung lượng USB", C: "Hạn chế người không được phép truy cập", D: "Sửa phần cứng hỏng" }, answer: "C" },
+        { q: "Câu 8. Vì sao không nên tùy tiện đổi đuôi .docx thành .jpg?", options: { A: "Tệp luôn được sao lưu tự động", B: "Thư mục chứa tệp bị xóa", C: "Đổi đuôi không chuyển nội dung văn bản thành ảnh, có thể gây khó mở tệp", D: "Mọi văn bản lập tức trở thành ảnh" }, answer: "C" },
+        { q: "Câu 9. Vì sao nên cầm vào đầu cắm thay vì giật dây khi tháo thiết bị?", options: { A: "Làm chuột chạy nhanh hơn", B: "Giúp tăng độ sáng màn hình", C: "Giúp tệp tự lưu", D: "Giảm nguy cơ đứt dây và hỏng kết nối" }, answer: "D" },
+        { q: "Câu 10. Thiết bị nào thường dùng để điều khiển con trỏ trên màn hình?", options: { A: "Loa", B: "Chuột", C: "Máy in", D: "Máy chiếu" }, answer: "B" },
+        { q: "Câu 11. Phần mở rộng trong tên tệp Bai_tho.docx là gì?", options: { A: "Bai", B: "tho", C: "Bai_tho", D: ".docx" }, answer: "D" },
+        { q: "Câu 12. Thiết bị nào tạo bản giấy từ tài liệu trong máy tính?", options: { A: "Micro", B: "Webcam", C: "Máy in", D: "Bàn phím" }, answer: "C" },
+        { q: "Câu 13. Thiết bị nào thu giọng nói để ghi âm?", options: { A: "Micro", B: "Máy chiếu", C: "Màn hình", D: "Tai nghe" }, answer: "A" },
+        { q: "Câu 14. Sao lưu dữ liệu là gì?", options: { A: "Tạo bản sao dữ liệu để có thể khôi phục khi cần", B: "Xóa mọi bản gốc", C: "Đổi màu biểu tượng", D: "Đóng cửa sổ" }, answer: "A" },
+        { q: "Câu 15. Khi mở ứng dụng vẽ, hệ điều hành có vai trò nào?", options: { A: "Biến màn hình thành máy in", B: "Xóa ứng dụng soạn thảo", C: "Tự vẽ mọi hình thay người dùng", D: "Hỗ trợ ứng dụng sử dụng tài nguyên và thiết bị" }, answer: "D" },
+        { q: "Câu 16. Thao tác nào có thể làm hỏng bàn phím khi vệ sinh?", options: { A: "Giữ bàn phím khô ráo", B: "Đổ nước trực tiếp lên bàn phím", C: "Dùng dụng cụ vệ sinh phù hợp theo hướng dẫn", D: "Nhờ giáo viên hướng dẫn" }, answer: "B" },
+        { q: "Câu 17. Thiết bị nào dùng để nhập chữ và số vào máy tính?", options: { A: "Bàn phím", B: "Loa", C: "Máy in", D: "Máy chiếu" }, answer: "A" },
+        { q: "Câu 18. Một ứng dụng nghe nhạc nhờ hệ điều hành hỗ trợ sử dụng loa. Điều này thể hiện quan hệ nào?", options: { A: "Ứng dụng sử dụng thiết bị thông qua sự hỗ trợ của hệ điều hành", B: "Ứng dụng nghe nhạc thay thế phần cứng", C: "Loa điều khiển mọi ứng dụng", D: "Tệp nhạc là hệ điều hành" }, answer: "A" },
+        { q: "Câu 19. Trong đường dẫn Hoc_tap/Tin_hoc/On_tap.docx, thư mục trực tiếp chứa tệp là gì?", options: { A: "Tin_hoc", B: "On_tap.docx", C: ".docx", D: "Hoc_tap" }, answer: "A" },
+        { q: "Câu 20. Máy có hệ điều hành nhưng chưa có ứng dụng trình chiếu. Vì sao chưa thể tạo bài trình chiếu bằng ứng dụng đó?", options: { A: "Màn hình không thể hiển thị chữ", B: "Ứng dụng cần được cài đặt hợp lệ trước khi dùng", C: "Hệ điều hành tự chứa mọi ứng dụng", D: "Bàn phím chỉ dùng cho trò chơi" }, answer: "B" },
+        { q: "Câu 21. Phần mềm nào thuộc nhóm hệ điều hành?", options: { A: "Paint", B: "PowerPoint", C: "Windows", D: "Word" }, answer: "C" },
+        { q: "Câu 22. Thiết bị nào vừa có chức năng vào vừa có chức năng ra?", options: { A: "Màn hình cảm ứng", B: "Micro", C: "Máy in", D: "Bàn phím" }, answer: "A" },
+        { q: "Câu 23. Một bạn định cắm đầu nối USB ngược chiều bằng cách dùng lực mạnh. Em giải thích thế nào?", options: { A: "Làm vậy có thể hỏng đầu nối hoặc cổng, cần kiểm tra chiều cắm", B: "Cổng USB tự đổi hình dạng để vừa đầu cắm", C: "Làm vậy giúp truyền dữ liệu nhanh hơn", D: "Mọi đầu USB đều phải cắm bằng lực mạnh" }, answer: "A" },
+        { q: "Câu 24. Webcam có chức năng chính nào?", options: { A: "Phát âm thanh", B: "Lưu điện cho máy tính", C: "Thu hình ảnh vào máy tính", D: "In hình lên giấy" }, answer: "C" },
+        { q: "Câu 25. Vì sao không nên mở tệp đính kèm từ người gửi không rõ danh tính?", options: { A: "Tệp chắc chắn làm hỏng màn hình", B: "Tệp luôn tự tạo bản sao an toàn", C: "Tệp có thể chứa phần mềm độc hại", D: "Tệp luôn là bài tập" }, answer: "C" },
+        { q: "Câu 26. Thư mục dùng để làm gì?", options: { A: "Quét giấy", B: "Cấp điện cho máy tính", C: "Tổ chức và chứa các tệp, thư mục con", D: "Phát âm thanh" }, answer: "C" },
+        { q: "Câu 27. Lệnh Cut thường được kết hợp với Paste để làm gì?", options: { A: "Di chuyển tệp sang vị trí khác", B: "Mở phần mềm vẽ", C: "Đổi phần mở rộng", D: "Tạo bản in" }, answer: "A" },
+        { q: "Câu 28. Lưu dữ liệu lên dịch vụ lưu trữ trực tuyến là hình thức lưu ở đâu?", options: { A: "Trên hệ thống máy chủ của dịch vụ", B: "Chỉ trên mặt giấy", C: "Chỉ trong bàn phím", D: "Chỉ trong loa" }, answer: "A" },
+        { q: "Câu 29. Lệnh nào dùng để sao chép tệp?", options: { A: "Rename", B: "Cut", C: "Delete", D: "Copy" }, answer: "D" },
+        { q: "Câu 30. Phần mềm chống virus có tác dụng nào?", options: { A: "In ảnh", B: "Tăng kích thước màn hình", C: "Sửa dây nguồn", D: "Phát hiện và xử lí phần mềm độc hại" }, answer: "D" },
+        { q: "Câu 31. Vì sao không được ép đầu cắm vào cổng không phù hợp?", options: { A: "Tự cài thêm phần mềm", B: "Tự xóa mọi tệp", C: "Làm tăng dung lượng ổ đĩa", D: "Có thể làm hỏng đầu cắm hoặc cổng kết nối" }, answer: "D" },
+        { q: "Câu 32. Tệp chương trình được lưu trong máy tính được xem là gì?", options: { A: "Dây kết nối", B: "Thiết bị vào", C: "Dữ liệu", D: "Thiết bị ra" }, answer: "C" },
+        { q: "Câu 33. Tệp Anh_lop.jpg thường chứa loại dữ liệu nào?", options: { A: "Bảng tính", B: "Âm thanh", C: "Hình ảnh", D: "Chương trình thực thi" }, answer: "C" },
+        { q: "Câu 34. Chức năng nào thuộc về hệ điều hành?", options: { A: "Chỉ soạn thu", B: "Chỉ làm bài trình chiếu", C: "Quản lí các thiết bị của máy tính", D: "Chỉ tạo tranh vẽ" }, answer: "C" },
+        { q: "Câu 35. Phần mềm nào điều phối hoạt động của phần cứng và phần mềm?", options: { A: "Một bản nhạc", B: "Hệ điều hành", C: "Một thư mục", D: "Một tệp ảnh" }, answer: "B" },
+        { q: "Câu 36. Thiết bị nào hiển thị hình ảnh từ máy tính lên màn chiếu?", options: { A: "Máy chiếu", B: "Chuột", C: "Máy quét", D: "Bàn phím" }, answer: "A" },
+        { q: "Câu 37. Phần mềm trình chiếu thuộc nhóm nào?", options: { A: "Thiết bị vào", B: "Thiết bị ra", C: "Phần mềm ứng dụng", D: "Bộ nhớ ngoài" }, answer: "C" },
+        { q: "Câu 38. Một bạn nói “Máy tính chỉ cần ứng dụng, không cần hệ điều hành”. Giải thích nào phù hợp?", options: { A: "Hệ điều hành chỉ dùng để nghe nhạc", B: "Ứng dụng thông thường cần môi trường do hệ điều hành cung cấp", C: "Ứng dụng luôn thay thế được hệ điều hành", D: "Hệ điều hành chỉ trang trí màn hình" }, answer: "B" },
+        { q: "Câu 39. Một bạn chỉ giữ bài nhóm trong USB và chưa có bản sao. Nhận xét nào đúng?", options: { A: "USB hỏng hoặc thất lạc có thể khiến mất bài", B: "Đóng thư mục sẽ tạo bản sao", C: "USB không bao giờ mất dữ liệu", D: "Đổi tên USB là đủ để sao lưu" }, answer: "A" },
+        { q: "Câu 40. Đối tượng nào có thể chứa nhiều thư mục con?", options: { A: "Một tệp .txt", B: "Một tệp .mp3", C: "Thư mục", D: "Một tệp .jpg" }, answer: "C" },
+        { q: "Câu 41. Muốn giữ tệp ở thư mục cũ và có thêm một bản ở thư mục mới, cần dùng cặp lệnh nào?", options: { A: "Rename và Cut", B: "Delete và Rename", C: "Cut và Paste", D: "Copy và Paste" }, answer: "D" },
+        { q: "Câu 42. Vì sao nên chia thư mục học tập theo từng môn?", options: { A: "Mọi tệp tự biến thành ảnh", B: "Máy tính không cần ổ đĩa", C: "Dễ tìm và quản lí tài liệu", D: "Không cần đặt tên tệp" }, answer: "C" },
+        { q: "Câu 43. Vì sao phần mềm chỉnh sửa ảnh không được xem là hệ điều hành?", options: { A: "Nó phục vụ chỉnh ảnh thay vì quản lí chung hoạt động máy tính", B: "Nó chỉ có thể chạy trên điện thoại", C: "Nó không có biểu tượng", D: "Nó có giao diện màu sắc" }, answer: "A" },
+        { q: "Câu 44. Phần mềm nào phù hợp để tính toán theo bảng?", options: { A: "Phần mềm xem video", B: "Phần mềm ghi âm", C: "Phần mềm vẽ", D: "Phần mềm bảng tính" }, answer: "D" },
+        { q: "Câu 45. Vì sao Word và Windows thuộc hai nhóm phần mềm khác nhau?", options: { A: "Windows là tệp âm thanh, Word là thư mục", B: "Word phục vụ soạn thảo, Windows quản lí hoạt động máy tính", C: "Cả hai chỉ dùng để vẽ", D: "Word là thiết bị vào, Windows là thiết bị ra" }, answer: "B" },
+        { q: "Câu 46. Lệnh nào dùng để xóa tệp được chọn?", options: { A: "Rename", B: "Delete", C: "Paste", D: "Copy" }, answer: "B" },
+        { q: "Câu 47. Vì sao tên Ke_hoach_trong_cay.docx dễ quản lí hơn tên Moi.docx?", options: { A: "Tên ngắn không thể mở", B: "Tên gợi nội dung của tài liệu", C: "Tên dài tự tăng điểm bài tập", D: "Tên dài luôn ngăn được virus" }, answer: "B" },
+        { q: "Câu 48. Sau khi dùng tài khoản trên máy tính dùng chung, cần làm gì?", options: { A: "Để nguyên tài khoản đang mở", B: "Gửi mật khẩu cho mọi người", C: "Lưu mật khẩu để người sau dùng", D: "Đăng xuất tài khoản" }, answer: "D" },
+        { q: "Câu 49. Tai nghe thông thường không có micro thuộc nhóm nào?", options: { A: "Thiết bị lưu trữ", B: "Thiết bị ra", C: "Thiết bị vào", D: "Thiết bị xử lí trung tâm" }, answer: "B" },
+        { q: "Câu 50. Chọn tệp, dùng Cut rồi Paste vào thư mục khác trên cùng ổ đĩa. Thao tác thành công, tệp ở đâu?", options: { A: "Chỉ ở vị trí cũ", B: "Ở thư mục mới, không còn tại vị trí cũ", C: "Ở cả hai vị trí như thao tác Copy", D: "Luôn nằm trong thùng rác" }, answer: "B" },
+        { q: "Câu 51. Máy quét dùng để làm gì?", options: { A: "Gõ văn bản", B: "Đưa hình ảnh trên giấy vào máy tính", C: "Chiếu bài trình bày", D: "Phát nhạc" }, answer: "B" },
+        { q: "Câu 52. Phần mềm nào là phần mềm ứng dụng?", options: { A: "Hệ điều hành Linux", B: "Hệ điều hành macOS", C: "Hệ điều hành Windows", D: "Phần mềm soạn thảo văn bản" }, answer: "D" },
+        { q: "Câu 53. Hai tệp cùng tên đầy đủ trong cùng một thư mục có thể gây vấn đề nào khi sao chép?", options: { A: "Tự đổi tên thư mục cha", B: "Tự in cả hai tệp", C: "Luôn tạo hai tệp giống tên mà không hỏi", D: "Hệ thống yêu cầu xử lí trùng tên, có nguy cơ thay thế tệp cũ" }, answer: "D" }
+    ];
+
+    const container = document.getElementById("quiz-container");
+    
+    // Khởi tạo HTML cho 53 câu hỏi
+    questions.forEach((item, index) => {
+        let html = `<div class="question" id="q${index}">
+                        <div class="question-title">${item.q}</div>
+                        <div class="options">`;
+        for (let key in item.options) {
+            html += `<label class="option-label" id="label-q${index}-${key}">
+                        <input type="radio" name="q${index}" value="${key}"> 
+                        ${key}. ${item.options[key]}
+                     </label>`;
+        }
+        html += `</div></div>`;
+        container.innerHTML += html;
+    });
+
+    function submitQuiz() {
+        // 1. Kiểm tra thông tin học sinh
+        const studentName = document.getElementById("studentName").value.trim();
+        const studentClass = document.getElementById("studentClass").value.trim();
+        const schoolName = document.getElementById("schoolName").value.trim();
+
+        if (!studentName || !studentClass || !schoolName) {
+            alert("Vui lòng điền đầy đủ Họ tên, Lớp và Tên trường trước khi nộp bài!");
+            document.getElementById("studentName").focus();
+            return;
+        }
+
+        // 2. Chấm điểm
+        let score = 0;
+        questions.forEach((item, index) => {
+            const selected = document.querySelector(`input[name="q${index}"]:checked`);
+            
+            for (let key in item.options) {
+                document.getElementById(`label-q${index}-${key}`).className = "option-label";
+            }
+
+            const correctLabel = document.getElementById(`label-q${index}-${item.answer}`);
+            correctLabel.classList.add("correct-text");
+
+            if (selected) {
+                if (selected.value === item.answer) {
+                    score++;
+                } else {
+                    const wrongLabel = document.getElementById(`label-q${index}-${selected.value}`);
+                    wrongLabel.classList.add("wrong-text");
+                }
+            }
+        });
+
+        // 3. Lưu dữ liệu đơn giản vào LocalStorage (Bộ nhớ trình duyệt)
+        const examRecord = {
+            hoTen: studentName,
+            lop: studentClass,
+            truong: schoolName,
+            diem: score,
+            tongSoCau: questions.length,
+            thoiGianNop: new Date().toLocaleString("vi-VN")
+        };
+        
+        let history = JSON.parse(localStorage.getItem("ketQuaThiTinHoc7")) || [];
+        history.push(examRecord);
+        localStorage.setItem("ketQuaThiTinHoc7", JSON.stringify(history));
+
+        // 4. Hiển thị kết quả cho học sinh
+        const resultDiv = document.getElementById("result");
+        resultDiv.style.display = "block";
+        resultDiv.innerHTML = `
+            <h3>KẾT QUẢ BÀI THI</h3>
+            <p><strong>Họ và tên:</strong> ${studentName}</p>
+            <p><strong>Lớp:</strong> ${studentClass} &nbsp;|&nbsp; <strong>Trường:</strong> ${schoolName}</p>
+            <p style="font-size: 1.5em; font-weight: bold; margin-top: 15px;">
+                Số câu đúng: ${score} / ${questions.length}
+            </p>
+            <p style="font-size: 0.8em; color: #7f8c8d; margin-top: 10px;">(Dữ liệu đã được lưu trữ cục bộ vào trình duyệt)</p>
+        `;
+        
+        // Cuộn trang xuống kết quả
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>
