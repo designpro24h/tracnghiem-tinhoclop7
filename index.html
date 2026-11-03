@@ -193,7 +193,17 @@
         };
         
         // Link API của bạn
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbzjpCdaMuje3ACAdYljgvO7l8scZtafGMPskPQIZhIFn1PI3FWaBFZnPqZomUuWg5cf/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzqk5KJzF6Dq4wzmt3Xf2-WUTkoLOwva7-UW6Io6dO4yIKQxfPmMKNrNSqgUfMFhDZX/exec';
+
+       // 3. Gửi dữ liệu lên Google Sheets
+//        const scriptURL = 'DÁN_LINK_WEB_APP_MỚI_CỦA_BẠN_VÀO_ĐÂY';
+
+        // Tạo dữ liệu dạng Form chuẩn của trình duyệt
+        const formData = new FormData();
+        formData.append("hoTen", studentName);
+        formData.append("lop", studentClass);
+        formData.append("truong", schoolName);
+        formData.append("diem", score + " / " + questions.length);
 
         const btnSubmit = document.querySelector('.btn-submit');
         btnSubmit.innerText = "Đang nộp bài... Vui lòng đợi!";
@@ -202,7 +212,7 @@
         // Bắn dữ liệu về Sheets
         fetch(scriptURL, {
             method: 'POST',
-            body: JSON.stringify(examRecord),
+            body: formData,
             mode: 'no-cors' 
         })
         .then(response => {
